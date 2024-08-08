@@ -13,3 +13,4 @@ builder3-logs.json
 output
 uploads
 temp
+.DS_Store
