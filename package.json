@@ -1,0 +1,57 @@
+{
+    "name": "FG-Builder3",
+    "version": "0.0.0",
+    "description": "FG-Builder3 is a cli that is user in Flexographer project.",
+    "main": "index.js",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "build:all": "bun builder/index.ts --all",
+      "build:md": "bun builder/index.ts --md",
+      "build:html": "bun builder/index.ts --html",
+      "generate:pdf:from:md": "./scripts/generate_pdf.sh generate:pdf:from:md",
+      "generate:pdf:from:html": "./scripts/generate_pdf.sh generate:pdf:from:html",
+      "generate:pdf:from:md:algorithms": "./scripts/generate_pdf.sh generate:pdf:from:md:algorithms",
+      "generate:pdf:from:html:algorithms": "./scripts/generate_pdf.sh generate:pdf:from:html:algorithms",
+      "generate:all": "./scripts/generate_all.sh"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/AndersDeath/fg-builder3.git"
+    },
+    "keywords": [],
+    "author": {
+      "name": "Vladimir Bolshakov",
+      "email": "andersdeath@gmail.com",
+      "url": "https://github.com/AndersDeath"
+    },
+    "license": "GPL-2.0",
+    "bugs": {
+      "url": "https://github.com/AndersDeath/fg-builder3/issues"
+    },
+    "homepage": "https://github.com/AndersDeath/fg-builder3#readme",
+    "devDependencies": {
+      "@types/marked": "^5.0.1",
+      "@types/pug": "^2.0.6",
+      "@types/yargs": "^17.0.31",
+      "concurrently": "^8.2.2",
+      "cz-conventional-changelog": "^3.3.0",
+      "parse-md": "^3.0.3",
+      "ts-node": "^10.9.1"
+    },
+    "dependencies": {
+      "fs-extra": "^11.1.1",
+      "highlight.js": "^11.8.0",
+      "marked": "^5.0.0",
+      "marked-gfm-heading-id": "^3.0.3",
+      "marked-highlight": "^2.0.1",
+      "marked-mangle": "^1.0.1",
+      "nodemon": "^3.1.1",
+      "typescript": "^5.1.6"
+    },
+    "config": {
+      "commitizen": {
+        "path": "./node_modules/cz-conventional-changelog"
+      }
+    }
+  }
+  
