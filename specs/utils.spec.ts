@@ -12,4 +12,24 @@ describe("Sum function", () => {
       )
     ).toEqual(mock.replaceGlobalImagePathToLocal.output);
   });
+
+  test("replaceMarkdownPageBreakToHtml test", async () => {
+    console.log('some resukt',await utils.replaceMarkdownPageBreakToHtml(
+      mock.replaceMarkdownPageBreakToHtml.input
+    ));
+    expect(
+      await utils.replaceMarkdownPageBreakToHtml(
+        mock.replaceMarkdownPageBreakToHtml.input
+      )
+    ).toEqual(mock.replaceMarkdownPageBreakToHtml.output);
+  });
+
+  test("removeIgnoreBlock test", async () => {
+    expect(
+      await utils.removeIgnoreBlock(
+        mock.removeIgnoreBlock.input
+      )
+    ).toEqual(mock.removeIgnoreBlock.output);
+  });
+
 });
