@@ -2,7 +2,7 @@ import { describe, test, expect } from "@jest/globals";
 import { Utils } from "../src/utils";
 import { utilsSpecMock } from "./mocks/utils.mock";
 
-describe("Sum function", () => {
+describe("Utils class", () => {
   const utils = new Utils();
   const mock = utilsSpecMock;
   test("replaceGlobalImagePathToLocal test", async () => {
@@ -14,9 +14,6 @@ describe("Sum function", () => {
   });
 
   test("replaceMarkdownPageBreakToHtml test", async () => {
-    console.log('some resukt',await utils.replaceMarkdownPageBreakToHtml(
-      mock.replaceMarkdownPageBreakToHtml.input
-    ));
     expect(
       await utils.replaceMarkdownPageBreakToHtml(
         mock.replaceMarkdownPageBreakToHtml.input
