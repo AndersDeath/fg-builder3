@@ -5,22 +5,22 @@ import {
   B3File,
   RawContent,
   OutputFileTypes,
-  RunConfig
+  RunConfig,
 } from "./models/interfaces";
 import { pageWrapperHtml } from "./ui/page-wrapper.html";
 import { FileGroup } from "./file-group";
 import { marked } from "./libs/marked";
 import { Logger } from "./logger/logger";
 import { Builder3FS } from "./builder-fs";
-import {Pandoc, PandocInput} from "./pandoc";
-import {Utils} from "./utils";
+import { Pandoc, PandocInput } from "./pandoc";
+import { removeIgnoreBlock, replaceGlobalImagePathToLocal } from "./utils";
 
 const RunConfigDefault: RunConfig = {
   targets: [],
   bookSettings: {
-    categories: []
+    categories: [],
   },
-  sourcePath: './content'
+  sourcePath: "./content",
 };
 
 export class Builder3 {
@@ -29,7 +29,6 @@ export class Builder3 {
   private readonly config: Config;
   private logger: Logger = new Logger();
   private b3fs: Builder3FS = new Builder3FS();
-  private utils: Utils = new Utils();
   private pandoc: Pandoc = new Pandoc();
 
   constructor(config: Config) {
@@ -46,9 +45,8 @@ export class Builder3 {
   }
 
   public async run(runConfig: RunConfig = RunConfigDefault): Promise<void> {
-
-    if(runConfig.sourcePath) {
-      this.config.sourceRootPath = runConfig.sourcePath
+    if (runConfig.sourcePath) {
+      this.config.sourceRootPath = runConfig.sourcePath;
     }
     this.parseMDLibInstance = await this.parseMDInit();
 
@@ -111,7 +109,7 @@ export class Builder3 {
     this.logger.log(`${this.rawContent.length} content items are parsed`);
   }
 
-  private getCategories():string[] {
+  private getCategories(): string[] {
     const folders: string[] = fs.readdirSync(this.config.sourceRootPath);
     return folders.filter((folder: string) =>
       fs.statSync(path.join(this.config.sourceRootPath, folder)).isDirectory()
@@ -129,9 +127,9 @@ export class Builder3 {
     return {
       category,
       metadata,
-      content: this.utils.removeIgnoreBlock(content),
+      content: removeIgnoreBlock(content),
       folderPath: "",
-      fileName: file.name
+      fileName: file.name,
     };
   }
 
@@ -149,7 +147,7 @@ export class Builder3 {
           category: file,
           path: filePath,
           sort: 0,
-          ignore: false
+          ignore: false,
         });
       }
     }
@@ -177,7 +175,7 @@ export class Builder3 {
 
     for (const file of files) {
       await this.b3fs.createCategoryDirectory(outputPath, file.category, [
-        "all"
+        "all",
       ]);
       fs.writeFileSync(
         file.path,
@@ -199,8 +197,8 @@ export class Builder3 {
 
     fs.mkdirp(this.config.tempFolderPath);
     for (const file of files) {
-      file.content = await this.utils.replaceGlobalImagePathToLocal(file.content);
-      file.content = await this.utils.removeIgnoreBlock(file.content);
+      file.content = await replaceGlobalImagePathToLocal(file.content);
+      file.content = await removeIgnoreBlock(file.content);
       // file.content = await this.replaceMarkdownPageBreakToHtml(file.content);
       fs.writeFileSync(file.path, file.content);
     }
@@ -213,7 +211,7 @@ export class Builder3 {
           inputPath: `temp/prepared-book-${category}.md`,
           outputPath: `temp/output_from_html_${category}.pdf`,
           isTableOfContents: true,
-          metadataFile: rConf.sourcePath+ `/${category}/pandoc-config.yaml`
+          metadataFile: rConf.sourcePath + `/${category}/pandoc-config.yaml`,
         };
         try {
           await this.pandoc.generate(config);
@@ -224,7 +222,6 @@ export class Builder3 {
     } else {
       this.logger.throwError("There are not categories in request");
     }
-
   }
 
   private async copyImageFolder(): Promise<void> {
@@ -233,6 +230,4 @@ export class Builder3 {
       path.join(this.config.tempFolderPath, "images")
     );
   }
-
-
 }
