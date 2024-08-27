@@ -14,6 +14,7 @@ import { Logger } from "./logger/logger";
 import { Builder3FS } from "./builder-fs";
 import { Pandoc, PandocInput } from "./pandoc";
 import { removeIgnoreBlock, replaceGlobalImagePathToLocal } from "./utils";
+import { targets } from "./config/targets";
 
 const RunConfigDefault: RunConfig = {
   targets: [],
@@ -37,7 +38,7 @@ export class Builder3 {
   }
 
   public get targets(): [string, string, string] {
-    return ["md", "html", "book"];
+    return targets
   }
 
   public get categories() {

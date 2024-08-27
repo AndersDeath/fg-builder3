@@ -1,0 +1,1 @@
+export const targets: [string, string, string] = ["md", "html", "book"];
