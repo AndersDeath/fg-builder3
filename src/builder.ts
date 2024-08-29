@@ -15,6 +15,7 @@ import { copyArtifactsFromTempToOutput, createCategoryDir } from "./builder-fs";
 import { Pandoc, PandocInput } from "./pandoc";
 import { removeIgnoreBlock, replaceGlobalImagePathToLocal } from "./utils";
 import { targets } from "./config/targets";
+import { runConfigResolver } from "./config/runConfigResolver";
 
 const RunConfigDefault: RunConfig = {
   targets: [],
@@ -50,7 +51,7 @@ export class Builder3 {
     }
     this.parseMDLibInstance = await this.parseMDInit();
 
-    const rConf: RunConfig = this.runConfigResolver(runConfig);
+    const rConf: RunConfig = runConfigResolver(runConfig);
 
     await this.init();
 
@@ -86,12 +87,6 @@ export class Builder3 {
     await Promise.all(
       categories.map((element: string) => this.buildBookTemplate(element))
     );
-  }
-
-  private runConfigResolver(runConfig: RunConfig): RunConfig {
-    runConfig.targets = runConfig.targets || [];
-    runConfig.bookSettings = runConfig.bookSettings || { categories: [] };
-    return runConfig;
   }
 
   private async init(): Promise<void> {
