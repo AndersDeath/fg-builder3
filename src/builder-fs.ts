@@ -5,18 +5,22 @@ import { Logger } from "./logger/logger";
 
 const logger: Logger = new Logger();
 
+const mkdirp = fs.mkdirp;
+
 const createCategoryDir = async (
   outputPath: string,
   categoryName: string,
   ignoreList: string[] = []
 ): Promise<void> => {
   if (ignoreList.includes(categoryName)) return;
-  return fs.mkdirp(path.join(outputPath, categoryName));
+  return mkdirp(path.join(outputPath, categoryName));
 };
 
-const copyArtifactsFromTempToOutput = async (rConf: RunConfig): Promise<void> => {
+const copyArtifactsFromTempToOutput = async (
+  rConf: RunConfig
+): Promise<void> => {
   if (rConf.bookSettings.categories.length > 0) {
-    fs.mkdirp("output");
+    mkdirp("output");
     rConf.bookSettings.categories.forEach((category: string): void => {
       fs.copyFileSync(
         `temp/output_from_html_${category}.pdf`,
@@ -26,7 +30,6 @@ const copyArtifactsFromTempToOutput = async (rConf: RunConfig): Promise<void> =>
   } else {
     logger.throwError("There are not categories in request");
   }
-}
+};
 
-
-export { createCategoryDir, copyArtifactsFromTempToOutput };
+export { createCategoryDir, copyArtifactsFromTempToOutput, mkdirp };
