@@ -7,6 +7,8 @@ const logger: Logger = new Logger();
 
 const mkdirp = fs.mkdirp;
 
+const copyFileSync = fs.copyFileSync;
+
 const createCategoryDir = async (
   outputPath: string,
   categoryName: string,
@@ -22,7 +24,7 @@ const copyArtifactsFromTempToOutput = async (
   if (rConf.bookSettings.categories.length > 0) {
     mkdirp("output");
     rConf.bookSettings.categories.forEach((category: string): void => {
-      fs.copyFileSync(
+      copyFileSync(
         `temp/output_from_html_${category}.pdf`,
         `output/${category}-${Date.now()}.pdf`
       );
@@ -32,4 +34,9 @@ const copyArtifactsFromTempToOutput = async (
   }
 };
 
-export { createCategoryDir, copyArtifactsFromTempToOutput, mkdirp };
+export {
+  createCategoryDir,
+  copyArtifactsFromTempToOutput,
+  mkdirp,
+  copyFileSync,
+};
