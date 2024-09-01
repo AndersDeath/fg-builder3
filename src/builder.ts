@@ -11,7 +11,7 @@ import { pageWrapperHtml } from "./ui/page-wrapper.html";
 import { FileGroup } from "./file-group";
 import { marked } from "./libs/marked";
 import { Logger } from "./logger/logger";
-import { copyArtifactsFromTempToOutput, createCategoryDir } from "./builder-fs";
+import { Builder3FS } from "./builder-fs";
 import { Pandoc, PandocInput } from "./pandoc";
 import { removeIgnoreBlock, replaceGlobalImagePathToLocal } from "./utils";
 import { targets } from "./config/targets";
@@ -31,6 +31,7 @@ export class Builder3 {
   private readonly config: Config;
   private logger: Logger = new Logger();
   private pandoc: Pandoc = new Pandoc();
+  private b3fs: Builder3FS = new Builder3FS();
 
   constructor(config: Config) {
     this.logger.log("Builder constructor is initialized");
@@ -61,7 +62,7 @@ export class Builder3 {
       await this.detectBookBookTemplateCategoriesAndBuild(rConf);
       // await this.copyImageFolder();
       await this.buildBookPdf(rConf);
-      await copyArtifactsFromTempToOutput(rConf);
+      await this.b3fs.copyArtifactsFromTempToOutput(rConf);
       fs.rmSync("./temp", { recursive: true, force: true });
       return;
     }
@@ -74,7 +75,7 @@ export class Builder3 {
       await this.detectBookBookTemplateCategoriesAndBuild(rConf);
       // await this.copyImageFolder();
       await this.buildBookPdf(rConf);
-      await copyArtifactsFromTempToOutput(rConf);
+      await this.b3fs.copyArtifactsFromTempToOutput(rConf);
       fs.rmSync("./temp", { recursive: true, force: true });
     }
     return;
@@ -169,7 +170,7 @@ export class Builder3 {
     const files: B3File[] = await fileGroup.run();
 
     for (const file of files) {
-      await createCategoryDir(outputPath, file.category, ["all"]);
+      await this.b3fs.createCategoryDir(outputPath, file.category, ["all"]);
       fs.writeFileSync(
         file.path,
         this.config.outputType === OutputFileTypes.HTML

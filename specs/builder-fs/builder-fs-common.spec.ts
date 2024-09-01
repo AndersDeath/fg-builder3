@@ -2,13 +2,14 @@ import { describe, test, expect } from "@jest/globals";
 const fs = require("fs-extra");
 const path = require("path");
 const os = require("os");
-import { mkdirp } from "../../src/builder-fs";
+import { Builder3FS } from "../../src/builder-fs";
 
-describe("Test Builder FS proxy functions", () => {
+describe("Builder3 FS proxy functions", () => {
   let tempDir;
-
+  let b3fs;
   beforeEach(async () => {
     tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "test-"));
+    b3fs = new Builder3FS();
   });
 
   afterEach(async () => {
@@ -16,7 +17,7 @@ describe("Test Builder FS proxy functions", () => {
   });
 
   test("Mkdirp test", async () => {
-    await mkdirp(tempDir);
+    await b3fs.mkdirp(tempDir);
     expect(await fs.pathExists(path.join(tempDir))).toBe(true);
   });
 });

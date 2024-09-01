@@ -12,7 +12,7 @@ export class Pandoc {
   constructor() {
   }
 
-  async generate(input: PandocInput): Promise<any> {
+  public async generate(input: PandocInput): Promise<any> {
     const cmd: string = this.createCommand(input);
     const { stdout, stderr } = await exec(cmd);
     console.log("stdout:", stdout);
@@ -26,7 +26,7 @@ export class Pandoc {
      })
   }
 
-  createCommand(input: PandocInput): string {
+  private createCommand(input: PandocInput): string {
     return `pandoc ${input.inputPath} -o ${input.outputPath} ${
       input.isTableOfContents ? "--toc --toc-depth=1 " : ""
     } ${
