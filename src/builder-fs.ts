@@ -5,8 +5,26 @@ import { Logger } from "./logger/logger";
 
 export class Builder3FS {
   public mkdirp = fs.mkdirp;
-
+  
   public copyFileSync = fs.copyFileSync;
+
+  public writeFileSync = fs.writeFileSync;
+  
+  public copy = fs.copy;
+
+  public statSync = fs.statSync;
+
+  public readdirSync = fs.readdirSync;
+
+  public rmSync = fs.rmSync;
+
+  public readdir = fs.readdir;
+
+  public readFile = fs.readFile;
+
+  public pathJoin = path.join;
+
+  public pathExtname = path.extname;
 
   private logger: Logger = new Logger();
 

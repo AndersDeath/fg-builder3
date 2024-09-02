@@ -1,5 +1,3 @@
-import * as fs from "fs-extra";
-import * as path from "path";
 import {
   Config,
   B3File,
@@ -63,7 +61,7 @@ export class Builder3 {
       // await this.copyImageFolder();
       await this.buildBookPdf(rConf);
       await this.b3fs.copyArtifactsFromTempToOutput(rConf);
-      fs.rmSync("./temp", { recursive: true, force: true });
+      this.b3fs.rmSync("./temp", { recursive: true, force: true });
       return;
     }
 
@@ -76,7 +74,7 @@ export class Builder3 {
       // await this.copyImageFolder();
       await this.buildBookPdf(rConf);
       await this.b3fs.copyArtifactsFromTempToOutput(rConf);
-      fs.rmSync("./temp", { recursive: true, force: true });
+      this.b3fs.rmSync("./temp", { recursive: true, force: true });
     }
     return;
   }
@@ -91,10 +89,15 @@ export class Builder3 {
   }
 
   private async init(): Promise<void> {
-    const folders: string[] = await fs.readdir(this.config.sourceRootPath);
+    const folders: string[] = await this.b3fs.readdir(
+      this.config.sourceRootPath
+    );
     for (const folder of folders) {
-      const folderPath: string = path.join(this.config.sourceRootPath, folder);
-      if (fs.statSync(folderPath).isDirectory()) {
+      const folderPath: string = this.b3fs.pathJoin(
+        this.config.sourceRootPath,
+        folder
+      );
+      if (this.b3fs.statSync(folderPath).isDirectory()) {
         const sourceFiles: B3File[] = await this.parseFolder(folderPath);
         const parsedContentWithCategory: RawContent[] = await Promise.all(
           sourceFiles.map((file: B3File) => this.parseRawContent(folder, file))
@@ -106,9 +109,11 @@ export class Builder3 {
   }
 
   private getCategories(): string[] {
-    const folders: string[] = fs.readdirSync(this.config.sourceRootPath);
+    const folders: string[] = this.b3fs.readdirSync(this.config.sourceRootPath);
     return folders.filter((folder: string) =>
-      fs.statSync(path.join(this.config.sourceRootPath, folder)).isDirectory()
+      this.b3fs
+        .statSync(this.b3fs.pathJoin(this.config.sourceRootPath, folder))
+        .isDirectory()
     );
   }
 
@@ -130,13 +135,16 @@ export class Builder3 {
   }
 
   private async parseFolder(folderPath: string): Promise<B3File[]> {
-    const files: string[] = await fs.readdir(folderPath);
+    const files: string[] = await this.b3fs.readdir(folderPath);
     const content: B3File[] = [];
 
     for (const file of files) {
-      const filePath: string = path.join(folderPath, file);
-      if (path.extname(file) === ".md") {
-        const pieceOfContent: string = await fs.readFile(filePath, "utf-8");
+      const filePath: string = this.b3fs.pathJoin(folderPath, file);
+      if (this.b3fs.pathExtname(file) === ".md") {
+        const pieceOfContent: string = await this.b3fs.readFile(
+          filePath,
+          "utf-8"
+        );
         content.push({
           name: file.replace(/\.[^.]+$/, ""),
           content: pieceOfContent,
@@ -171,7 +179,7 @@ export class Builder3 {
 
     for (const file of files) {
       await this.b3fs.createCategoryDir(outputPath, file.category, ["all"]);
-      fs.writeFileSync(
+      this.b3fs.writeFileSync(
         file.path,
         this.config.outputType === OutputFileTypes.HTML
           ? pageWrapperHtml(marked.parse(file.content))
@@ -189,12 +197,12 @@ export class Builder3 {
       "prepared-book-" + category
     );
 
-    fs.mkdirp(this.config.tempFolderPath);
+    this.b3fs.mkdirp(this.config.tempFolderPath);
     for (const file of files) {
       file.content = await replaceGlobalImagePathToLocal(file.content);
       file.content = await removeIgnoreBlock(file.content);
       // file.content = await this.replaceMarkdownPageBreakToHtml(file.content);
-      fs.writeFileSync(file.path, file.content);
+      this.b3fs.writeFileSync(file.path, file.content);
     }
   }
 
@@ -219,9 +227,9 @@ export class Builder3 {
   }
 
   private async copyImageFolder(): Promise<void> {
-    await fs.copy(
+    await this.b3fs.copy(
       this.config.imageFolderPath,
-      path.join(this.config.tempFolderPath, "images")
+      this.b3fs.pathJoin(this.config.tempFolderPath, "images")
     );
   }
 }
