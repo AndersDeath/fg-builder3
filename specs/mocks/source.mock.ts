@@ -1,10 +1,9 @@
-const file1 = "";
-
-const file2 = "";
+import { file1Mock } from "./file1.mock";
+import { file2Mock } from "./file2.mock";
 
 const folder = {
-  "somefirst.md": file1,
-  "somesecond.md": file2,
+  "somefirst.md": file1Mock,
+  "somesecond.md": file2Mock,
 };
 
 const files = {
