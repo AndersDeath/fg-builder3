@@ -55,13 +55,7 @@ export class Builder3 {
     await this.init();
 
     if (runConfig.targets?.length === 0) {
-      await this.buildStaticHtml();
-      await this.buildStaticMD();
-      await this.detectBookBookTemplateCategoriesAndBuild(rConf);
-      // await this.copyImageFolder();
-      await this.buildBookPdf(rConf);
-      await this.b3fs.copyArtifactsFromTempToOutput(rConf);
-      this.b3fs.rmSync("./temp", { recursive: true, force: true });
+      await this.runIfTargetsAreEmpty(rConf);
       return;
     }
 
@@ -77,6 +71,16 @@ export class Builder3 {
       this.b3fs.rmSync("./temp", { recursive: true, force: true });
     }
     return;
+  }
+
+  private async runIfTargetsAreEmpty(rConf: RunConfig) {
+    await this.buildStaticHtml();
+    await this.buildStaticMD();
+    await this.detectBookBookTemplateCategoriesAndBuild(rConf);
+    // await this.copyImageFolder();
+    await this.buildBookPdf(rConf);
+    await this.b3fs.copyArtifactsFromTempToOutput(rConf);
+    this.b3fs.rmSync("./temp", { recursive: true, force: true });
   }
 
   private async detectBookBookTemplateCategoriesAndBuild(
