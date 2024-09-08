@@ -11,4 +11,5 @@ const folderMock = {
 const filesMock = {
   category1: folderMock,
   category2: folderMock,
+  category3: folderMock,
 };
