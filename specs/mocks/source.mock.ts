@@ -8,7 +8,7 @@ const folderMock = {
   "somethird.md": file3Mock
 };
 
-const filesMock = {
+export const filesMock = {
   category1: folderMock,
   category2: folderMock,
   category3: folderMock,
