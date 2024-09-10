@@ -7,25 +7,27 @@ import { filesMock } from "../mocks/source.mock";
 
 describe("Builder3 FS proxy functions", () => {
   let tempDir;
-  let b3fs;
+  let b3fs: Builder3FS;
   beforeEach(async () => {
-  tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "test-"));
+    b3fs = new Builder3FS();
+    tempDir = await b3fs.mkdtemp(b3fs.pathJoin(os.tmpdir(), "test-"));
     Object.keys(filesMock).forEach(async (folder: string) => {
-      await fs.mkdirp(path.join(tempDir, folder));
+      await b3fs.mkdirp(b3fs.pathJoin(tempDir, folder));
       Object.keys(filesMock[folder]).forEach((fileName: string) => {
-        fs.writeFileSync(path.join(tempDir,folder,fileName,),filesMock[folder][fileName]);
+        b3fs.writeFileSync(
+          b3fs.pathJoin(tempDir, folder, fileName),
+          filesMock[folder][fileName]
+        );
       });
     });
-
-    b3fs = new Builder3FS();
   });
 
   afterEach(async () => {
-    await fs.remove(tempDir);
+    await b3fs.remove(tempDir);
   });
 
   test("Mkdirp test", async () => {
     await b3fs.mkdirp(tempDir);
-    expect(await fs.pathExists(path.join(tempDir))).toBe(true);
+    expect(await b3fs.pathExists(b3fs.pathJoin(tempDir))).toBe(true);
   });
 });

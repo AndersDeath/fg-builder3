@@ -5,11 +5,11 @@ import { Logger } from "./logger/logger";
 
 export class Builder3FS {
   public mkdirp = fs.mkdirp;
-  
+
   public copyFileSync = fs.copyFileSync;
 
   public writeFileSync = fs.writeFileSync;
-  
+
   public copy = fs.copy;
 
   public statSync = fs.statSync;
@@ -21,6 +21,12 @@ export class Builder3FS {
   public readdir = fs.readdir;
 
   public readFile = fs.readFile;
+
+  public pathExists = fs.pathExists;
+
+  public mkdtemp = fs.mkdtemp;
+
+  public remove = fs.remove;
 
   public pathJoin = path.join;
 
