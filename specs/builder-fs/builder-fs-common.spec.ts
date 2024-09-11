@@ -4,6 +4,7 @@ const path = require("path");
 const os = require("os");
 import { Builder3FS } from "../../src/builder-fs";
 import { filesMock } from "../mocks/source.mock";
+import { B3File } from "../../src/models/interfaces";
 
 describe("Builder3 FS proxy functions", () => {
   let tempDir;
@@ -30,4 +31,22 @@ describe("Builder3 FS proxy functions", () => {
     await b3fs.mkdirp(tempDir);
     expect(await b3fs.pathExists(b3fs.pathJoin(tempDir))).toBe(true);
   });
+
+  test("as", async ()=> {
+    const folders: string[] = await b3fs.readdir(
+      tempDir
+    );
+
+    for (const folder of folders) {
+      const folderPath: string = b3fs.pathJoin(
+        tempDir,
+        folder
+      );
+      if (b3fs.statSync(folderPath).isDirectory()) {
+        console.log(folderPath);
+      }
+    }
+
+    // console.log(folders);
+  })
 });
