@@ -4,7 +4,7 @@ const path = require("path");
 const os = require("os");
 import { Builder3FS } from "../../src/builder-fs";
 import { filesMock } from "../mocks/source.mock";
-import { B3File } from "../../src/models/interfaces";
+import { B3File, RawContent } from "../../src/models/interfaces";
 
 describe("Builder3 FS proxy functions", () => {
   let tempDir;
@@ -46,7 +46,13 @@ describe("Builder3 FS proxy functions", () => {
         console.log(folderPath);
       }
     }
+    const a:any = [];
+    const sourceFiles: B3File[] = await b3fs.parseFolders(tempDir);
+    await Promise.all(
+      sourceFiles.map((file: B3File) => a.push(file))
+    );
+    
 
-    // console.log(folders);
-  })
+    console.log(a.length);
+  });
 });

@@ -93,22 +93,29 @@ export class Builder3 {
   }
 
   private async init(): Promise<void> {
-    const folders: string[] = await this.b3fs.readdir(
-      this.config.sourceRootPath
+
+    const sourceFiles: B3File[] = await this.b3fs.parseFolders(this.config.sourceRootPath);
+    const parsedContentWithCategory: RawContent[] = await Promise.all(
+      sourceFiles.map((file: B3File) => this.parseRawContent(file))
     );
-    for (const folder of folders) {
-      const folderPath: string = this.b3fs.pathJoin(
-        this.config.sourceRootPath,
-        folder
-      );
-      if (this.b3fs.statSync(folderPath).isDirectory()) {
-        const sourceFiles: B3File[] = await this.parseFolder(folderPath);
-        const parsedContentWithCategory: RawContent[] = await Promise.all(
-          sourceFiles.map((file: B3File) => this.parseRawContent(folder, file))
-        );
-        this.rawContent.push(...parsedContentWithCategory);
-      }
-    }
+    this.rawContent.push(...parsedContentWithCategory);
+    console.log(this.rawContent);
+    // const folders: string[] = await this.b3fs.readdir(
+    //   this.config.sourceRootPath
+    // );
+    // for (const folder of folders) {
+    //   const folderPath: string = this.b3fs.pathJoin(
+    //     this.config.sourceRootPath,
+    //     folder
+    //   );
+    //   if (this.b3fs.statSync(folderPath).isDirectory()) {
+    //     const sourceFiles: B3File[] = await this.parseFolder(folderPath);
+    //     const parsedContentWithCategory: RawContent[] = await Promise.all(
+    //       sourceFiles.map((file: B3File) => this.parseRawContent(file))
+    //     );
+    //     this.rawContent.push(...parsedContentWithCategory);
+    //   }
+    // }
     this.logger.log(`${this.rawContent.length} content items are parsed`);
   }
 
@@ -127,40 +134,15 @@ export class Builder3 {
     return parseMD;
   }
 
-  private parseRawContent(category: string, file: B3File): RawContent {
+  private parseRawContent(file: B3File): RawContent {
     const { metadata, content }: any = this.parseMDLibInstance(file.content);
     return {
-      category,
+      category: file.category,
       metadata,
       content: removeIgnoreBlock(content),
       folderPath: "",
       fileName: file.name,
     };
-  }
-
-  private async parseFolder(folderPath: string): Promise<B3File[]> {
-    const files: string[] = await this.b3fs.readdir(folderPath);
-    const content: B3File[] = [];
-
-    for (const file of files) {
-      const filePath: string = this.b3fs.pathJoin(folderPath, file);
-      if (this.b3fs.pathExtname(file) === ".md") {
-        const pieceOfContent: string = await this.b3fs.readFile(
-          filePath,
-          "utf-8"
-        );
-        content.push({
-          name: file.replace(/\.[^.]+$/, ""),
-          content: pieceOfContent,
-          category: file,
-          path: filePath,
-          sort: 0,
-          ignore: false,
-        });
-      }
-    }
-
-    return content;
   }
 
   private async buildStaticMD(): Promise<void> {
