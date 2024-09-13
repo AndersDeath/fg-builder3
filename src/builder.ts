@@ -99,23 +99,7 @@ export class Builder3 {
       sourceFiles.map((file: B3File) => this.parseRawContent(file))
     );
     this.rawContent.push(...parsedContentWithCategory);
-    console.log(this.rawContent);
-    // const folders: string[] = await this.b3fs.readdir(
-    //   this.config.sourceRootPath
-    // );
-    // for (const folder of folders) {
-    //   const folderPath: string = this.b3fs.pathJoin(
-    //     this.config.sourceRootPath,
-    //     folder
-    //   );
-    //   if (this.b3fs.statSync(folderPath).isDirectory()) {
-    //     const sourceFiles: B3File[] = await this.parseFolder(folderPath);
-    //     const parsedContentWithCategory: RawContent[] = await Promise.all(
-    //       sourceFiles.map((file: B3File) => this.parseRawContent(file))
-    //     );
-    //     this.rawContent.push(...parsedContentWithCategory);
-    //   }
-    // }
+  
     this.logger.log(`${this.rawContent.length} content items are parsed`);
   }
 

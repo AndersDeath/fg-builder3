@@ -32,7 +32,7 @@ describe("Builder3 FS proxy functions", () => {
     expect(await b3fs.pathExists(b3fs.pathJoin(tempDir))).toBe(true);
   });
 
-  test("as", async ()=> {
+  test("Check that builder get files", async ()=> {
     const folders: string[] = await b3fs.readdir(
       tempDir
     );
@@ -53,6 +53,6 @@ describe("Builder3 FS proxy functions", () => {
     );
     
 
-    console.log(a.length);
+    console.log(sourceFiles.length);
   });
 });
