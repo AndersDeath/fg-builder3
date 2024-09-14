@@ -14,6 +14,7 @@ import { Pandoc, PandocInput } from "./pandoc";
 import { removeIgnoreBlock, replaceGlobalImagePathToLocal } from "./utils";
 import { targets } from "./config/targets";
 import { runConfigResolver } from "./config/runConfigResolver";
+import { TEMP_DIR } from "./config/folders";
 
 const RunConfigDefault: RunConfig = {
   targets: [],
@@ -93,13 +94,14 @@ export class Builder3 {
   }
 
   private async init(): Promise<void> {
-
-    const sourceFiles: B3File[] = await this.b3fs.parseFolders(this.config.sourceRootPath);
+    const sourceFiles: B3File[] = await this.b3fs.parseFolders(
+      this.config.sourceRootPath
+    );
     const parsedContentWithCategory: RawContent[] = await Promise.all(
       sourceFiles.map((file: B3File) => this.parseRawContent(file))
     );
     this.rawContent.push(...parsedContentWithCategory);
-  
+
     this.logger.log(`${this.rawContent.length} content items are parsed`);
   }
 
@@ -180,8 +182,14 @@ export class Builder3 {
     if (rConf.bookSettings.categories.length > 0) {
       for (const category of rConf.bookSettings.categories) {
         const config: PandocInput = {
-          inputPath: `temp/prepared-book-${category}.md`,
-          outputPath: `temp/output_from_html_${category}.pdf`,
+          inputPath: this.b3fs.pathJoin(
+            TEMP_DIR,
+            "prepared-book-${category}.md"
+          ),
+          outputPath: this.b3fs.pathJoin(
+            TEMP_DIR,
+            "output_from_html_${category}.pdf"
+          ),
           isTableOfContents: true,
           metadataFile: rConf.sourcePath + `/${category}/pandoc-config.yaml`,
         };

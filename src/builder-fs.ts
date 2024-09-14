@@ -1,7 +1,8 @@
 import * as fs from "fs-extra";
 import * as path from "path";
-import { B3File, RawContent, RunConfig } from "./models/interfaces";
+import { B3File, RunConfig } from "./models/interfaces";
 import { Logger } from "./logger/logger";
+import { OUTPUT_DIR, TEMP_DIR } from "./config/folders";
 
 export class Builder3FS {
   public mkdirp = fs.mkdirp;
@@ -47,11 +48,10 @@ export class Builder3FS {
 
   public async copyArtifactsFromTempToOutput(rConf: RunConfig): Promise<void> {
     if (rConf.bookSettings.categories.length > 0) {
-      this.mkdirp("output");
+      this.mkdirp(OUTPUT_DIR);
       rConf.bookSettings.categories.forEach((category: string): void => {
-        this.copyFileSync(
-          `temp/output_from_html_${category}.pdf`,
-          `output/${category}-${Date.now()}.pdf`
+        this.copyFileSync(this.pathJoin(TEMP_DIR, 'output_from_html_${category}.pdf'),
+        this.pathJoin(OUTPUT_DIR,`${category}-${Date.now()}.pdf`)
         );
       });
     } else {
