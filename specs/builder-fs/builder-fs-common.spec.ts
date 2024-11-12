@@ -42,9 +42,6 @@ describe("Builder3 FS proxy functions", () => {
         tempDir,
         folder
       );
-      if (b3fs.statSync(folderPath).isDirectory()) {
-        console.log(folderPath);
-      }
     }
     const a:any = [];
     const sourceFiles: B3File[] = await b3fs.parseFolders(tempDir);
@@ -52,7 +49,6 @@ describe("Builder3 FS proxy functions", () => {
       sourceFiles.map((file: B3File) => a.push(file))
     );
     
-
-    console.log(sourceFiles.length);
+    expect(sourceFiles.length).toEqual(9);
   });
 });
